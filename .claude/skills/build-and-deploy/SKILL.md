@@ -9,36 +9,35 @@ description: Build and deploy this AI Chatbot application. Use when building, de
 
 Build and deploy the AI Chatbot (Chat SDK) application. This Next.js project provides a full-featured AI chatbot with authentication, file storage, and multiple model provider support.
 
-## Environment Variables
-
-Required environment variables:
-- `AUTH_SECRET` - Random secret for authentication (generate with `openssl rand -base64 32`)
-- `POSTGRES_URL` - PostgreSQL database connection URL
-- `BLOB_READ_WRITE_TOKEN` - Vercel Blob storage token
-- `REDIS_URL` - Redis connection URL for rate limiting
-
-Optional (for non-Vercel deployments):
-- `AI_GATEWAY_API_KEY` - Vercel AI Gateway API key
-
 ## Workflow
 
 ### 1. Setup Environment Variables
 
-```bash
-cp .env.example .env
-```
-
-Then populate `.env` with values from environment:
+**Read `.env.example` to see all required variables:**
 
 ```bash
-cat > .env << EOF
-AUTH_SECRET="${AUTH_SECRET}"
-POSTGRES_URL="${POSTGRES_URL}"
-BLOB_READ_WRITE_TOKEN="${BLOB_READ_WRITE_TOKEN}"
-REDIS_URL="${REDIS_URL}"
-AI_GATEWAY_API_KEY="${AI_GATEWAY_API_KEY}"
-EOF
+cat .env.example
 ```
+
+**Create `.env` by reading values from current environment:**
+
+For each variable in `.env.example`, read the value from the current environment and write to `.env`. Example approach:
+
+```bash
+# Read .env.example and create .env with values from current environment
+while IFS= read -r line || [[ -n "$line" ]]; do
+  # Skip comments and empty lines
+  [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
+  # Extract variable name (before = sign)
+  var_name=$(echo "$line" | cut -d'=' -f1)
+  # Get value from environment
+  var_value="${!var_name}"
+  # Write to .env
+  echo "${var_name}=${var_value}" >> .env
+done < .env.example
+```
+
+Or manually inspect `.env.example` and create `.env` with the required values from environment variables.
 
 ### 2. Install Dependencies
 
@@ -84,12 +83,12 @@ netlify deploy --prod
 - **Database Required:** Must have PostgreSQL database set up before building
 - **Migration Required:** Run `pnpm db:migrate` before first build
 - **Auth Secret:** Generate a secure random secret for AUTH_SECRET
-- **AI Gateway:** For Vercel deployments, OIDC tokens are used automatically
+- **Environment Variables:** All values come from current environment - inspect `.env.example` for required variables
 - **No Dev Server:** Never run `pnpm dev` in VM environment
 
 ## Features
 
-- Multi-model AI support via Vercel AI Gateway
+- Multi-model AI support (OpenAI, Anthropic, Google)
 - User authentication with Auth.js
 - Chat history persistence
 - File upload with Vercel Blob
