@@ -5,10 +5,6 @@ description: Build and deploy this AI Chatbot application. Use when building, de
 
 # Build and Deploy AI Chatbot
 
-## Overview
-
-Build and deploy the AI Chatbot (Chat SDK) application. This Next.js project provides a full-featured AI chatbot with authentication, file storage, and multiple model provider support.
-
 ## Workflow
 
 ### 1. Setup Environment Variables
@@ -95,13 +91,3 @@ netlify deploy --prod
 - **Auth Secret:** Generate a secure random secret for AUTH_SECRET
 - **Environment Variables:** All values come from current environment - inspect `.env.example` for required variables
 - **No Dev Server:** Never run `pnpm dev` in VM environment
-
-## Features
-
-- Multi-model AI support (OpenAI, Anthropic, Google)
-- User authentication with Auth.js
-- Chat history persistence
-- File upload with Vercel Blob
-- Rate limiting with Redis
-- Code highlighting and markdown rendering
-- Streaming responses
