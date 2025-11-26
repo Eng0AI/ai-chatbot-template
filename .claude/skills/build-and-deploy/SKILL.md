@@ -66,6 +66,12 @@ next build
 
 **Vercel (Recommended):**
 ```bash
+# Set platform env vars (first time only, use printf NOT echo to avoid newline issues)
+while IFS='=' read -r key value; do
+  [[ "$key" =~ ^#.*$ || -z "$key" ]] && continue
+  printf "%s" "$value" | vercel env add "$key" production
+done < .env
+
 # Build locally for production
 vercel build --prod
 
@@ -75,10 +81,10 @@ vercel deploy --prebuilt --prod --yes
 
 **Netlify:**
 ```bash
-# First deployment
-netlify deploy --prod --create-site
+# Set platform env vars (first time only)
+netlify env:import .env
 
-# Subsequent deployments
+# Deploy
 netlify deploy --prod
 ```
 
